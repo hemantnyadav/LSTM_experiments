@@ -76,8 +76,9 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
       self._enable_caching_device = kwargs.pop('enable_caching_device', True)
     else:
       self._enable_caching_device = kwargs.pop('enable_caching_device', False)
-    super(LSTMCell, self).__init__(**kwargs)
+    super(LSTMCell, self).__init__(**kwargs)1
     self.units = units
+
     self.activation = activations.get(activation)
     self.recurrent_activation = activations.get(recurrent_activation)
     self.use_bias = use_bias
@@ -127,7 +128,6 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
 
     if self.use_bias:
       if self.unit_forget_bias:
-
         def bias_initializer(_, *args, **kwargs):
           return backend.concatenate([
               self.bias_initializer((self.units,), *args, **kwargs),

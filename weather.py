@@ -140,8 +140,8 @@ layer = keras.layers.RNN(cell)
 lstm_out = layer(inputs)
 '''
 
-#lstm_out = keras.layers.RNN(MinimalRNNCell(32))(inputs)
-lstm_out = keras.layers.LSTM(32)(inputs)
+lstm_out = keras.layers.RNN(Vanilla_LSTM(32))(inputs)
+#lstm_out = keras.layers.LSTM(32)(inputs)
 #print("weights:", len(lstm_out.weights))
 #print("non-trainable weights:", len(lstm_out.non_trainable_weights))
 outputs = keras.layers.Dense(1)(lstm_out)
