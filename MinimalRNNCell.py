@@ -25,19 +25,23 @@ class MinimalRNNCell(keras.layers.Layer):
         self.kernel = self.add_weight(shape=(input_shape[-1], self.units),
                                       initializer='uniform',
                                       name='kernel')
-        #print(self.kernel)
+        print("=============================",type(self.kernel))
+        print("=============================",self.kernel.numpy().shape)    
+            
         self.recurrent_kernel = self.add_weight(
             shape=(self.units, self.units),
             initializer='uniform',
             name='recurrent_kernel')
-        print(self.recurrent_kernel)
+        #print(self.recurrent_kernel)
+
         #self.built = True
 
     def call(self, inputs, states):
+        #print("States",states)
         prev_output = states[0]
         h = K.dot(inputs, self.kernel)
         output = h + K.dot(prev_output, self.recurrent_kernel)
         return output, [output]
 
 
-print(MinimalRNNCell(10).build((256, 120, 7)))
+#print(MinimalRNNCell(10).build((256, 120, 7)))

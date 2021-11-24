@@ -2,14 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
-from MinimalRNNCell import MinimalRNNCell
+
 #from clstm import LSTM
 
 df = pd.read_csv("jena_climate_2009_2016.csv")
 
-print(df.head(), df.shape)
+#print(df.head(), df.shape)
 df = df.sample(frac=0.3, replace=False, random_state=1)
-print(df.head(), df.shape)
+#print(df.head(), df.shape)
 split_fraction = 0.715
 train_split = int(split_fraction * int(df.shape[0]))
 step = 6
@@ -139,9 +139,17 @@ cell = MinimalRNNCell(32)
 layer = keras.layers.RNN(cell)
 lstm_out = layer(inputs)
 '''
+#from LSTMCell import LSTMCell
+#lstm_out = keras.layers.RNN(LSTMCell(5))(inputs)
 
-lstm_out = keras.layers.RNN(Vanilla_LSTM(32))(inputs)
+from Vanilla_LSTM import Vanilla_LSTM
+lstm_out = keras.layers.RNN(Vanilla_LSTM(8))(inputs)
+
+#from MinimalRNNCell import MinimalRNNCell
+#lstm_out = keras.layers.RNN(MinimalRNNCell(5))(inputs)
+
 #lstm_out = keras.layers.LSTM(32)(inputs)
+
 #print("weights:", len(lstm_out.weights))
 #print("non-trainable weights:", len(lstm_out.non_trainable_weights))
 outputs = keras.layers.Dense(1)(lstm_out)
@@ -182,4 +190,4 @@ def visualize_loss(history, title):
     plt.show()
 
 
-visualize_loss(history, "Training and Validation Loss on Vanila LSTM")
+visualize_loss(history, "Training and Validation Loss on Vanila LSTM(32) 40 epochs")

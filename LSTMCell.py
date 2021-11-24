@@ -1,5 +1,12 @@
-@keras_export(v1=['keras.layers.LSTMCell'])
-class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
+import keras
+from keras import backend
+from keras import activations
+from keras import constraints
+from keras import initializers
+from keras import regularizers
+import tensorflow as tf
+
+class LSTMCell(keras.layers.Layer):
   """Cell class for the LSTM layer.
 
   Args:
@@ -76,11 +83,12 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
       self._enable_caching_device = kwargs.pop('enable_caching_device', True)
     else:
       self._enable_caching_device = kwargs.pop('enable_caching_device', False)
-    super(LSTMCell, self).__init__(**kwargs)1
+    super(LSTMCell, self).__init__(**kwargs)
     self.units = units
 
     self.activation = activations.get(activation)
     self.recurrent_activation = activations.get(recurrent_activation)
+
     self.use_bias = use_bias
 
     self.kernel_initializer = initializers.get(kernel_initializer)
@@ -107,9 +115,9 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
     self.state_size = [self.units, self.units]
     self.output_size = self.units
 
-  @tf_utils.shape_type_conversion
+  
   def build(self, input_shape):
-    default_caching_device = _caching_device(self)
+    #default_caching_device = _caching_device(self)
     input_dim = input_shape[-1]
     self.kernel = self.add_weight(
         shape=(input_dim, self.units * 4),
@@ -117,14 +125,14 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
         initializer=self.kernel_initializer,
         regularizer=self.kernel_regularizer,
         constraint=self.kernel_constraint,
-        caching_device=default_caching_device)
+        )
     self.recurrent_kernel = self.add_weight(
         shape=(self.units, self.units * 4),
         name='recurrent_kernel',
         initializer=self.recurrent_initializer,
         regularizer=self.recurrent_regularizer,
         constraint=self.recurrent_constraint,
-        caching_device=default_caching_device)
+        )
 
     if self.use_bias:
       if self.unit_forget_bias:
@@ -142,9 +150,10 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
           initializer=bias_initializer,
           regularizer=self.bias_regularizer,
           constraint=self.bias_constraint,
-          caching_device=default_caching_device)
+          )
     else:
       self.bias = None
+
     self.built = True
 
   def _compute_carry_and_output(self, x, h_tm1, c_tm1):
@@ -171,9 +180,10 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
     return c, o
 
   def call(self, inputs, states, training=None):
+    print("Hemant---------------------------------------------------------------")
     h_tm1 = states[0]  # previous memory state
     c_tm1 = states[1]  # previous carry state
-
+    print("Hemant---------------------------------------------------------------")
     dp_mask = self.get_dropout_mask_for_cell(inputs, training, count=4)
     rec_dp_mask = self.get_recurrent_dropout_mask_for_cell(
         h_tm1, training, count=4)
@@ -273,5 +283,6 @@ class LSTMCell(DropoutRNNCellMixin, base_layer.BaseRandomLayer):
     return dict(list(base_config.items()) + list(config.items()))
 
   def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
+    #print("batch_size",batch_size)
     return list(_generate_zero_filled_state_for_cell(
         self, inputs, batch_size, dtype))
