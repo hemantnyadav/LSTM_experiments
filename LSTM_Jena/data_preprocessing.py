@@ -29,6 +29,7 @@ df['Wy'] = df['wv (m/s)']*np.sin(df['wd (deg)']*np.pi / 180)
 df['max Wx'] = df['max. wv (m/s)']*np.cos(df['wd (deg)']*np.pi / 180)
 df['max Wy'] = df['max. wv (m/s)']*np.sin(df['wd (deg)']*np.pi / 180)
 
+df.drop(['wv (m/s)','max. wv (m/s)','wd (deg)'])
 # Convert Date time column from string to seconds
 timestamp_s = date_time.map(pd.Timestamp.timestamp)
 

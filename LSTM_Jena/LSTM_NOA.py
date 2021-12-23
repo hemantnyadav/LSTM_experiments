@@ -116,8 +116,7 @@ class LSTM_NOA(keras.layers.Layer):
 		c = f * c_tm1 + i * self.activation(x_c + backend.dot(
 			h_tm1_c, self.recurrent_kernel[:, self.units * 2:self.units * 3]))
 		
-		o = self.recurrent_activation(
-		    x_o + backend.dot(h_tm1_o, self.recurrent_kernel[:, self.units * 3:]))
+		o = x_o + backend.dot(h_tm1_o, self.recurrent_kernel[:, self.units * 3:])
 		#print(i)
 		return c, o
 
@@ -163,7 +162,6 @@ class LSTM_NOA(keras.layers.Layer):
 		c, o = self._compute_carry_and_output(x, h_tm1, c_tm1)
 
 		
-		# No Output Activation Function: HNY
-		h = o * c  
+		h = o * self.activation(c)  # To be understood
 
 		return h, [h, c]

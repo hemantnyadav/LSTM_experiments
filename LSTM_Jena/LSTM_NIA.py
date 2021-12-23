@@ -108,8 +108,10 @@ class LSTM_NIA(keras.layers.Layer):
 		"""Computes carry and output using split kernels."""
 		x_i, x_f, x_c, x_o = x
 		h_tm1_i, h_tm1_f, h_tm1_c, h_tm1_o = h_tm1
-		i = self.recurrent_activation(
-		    x_i + backend.dot(h_tm1_i, self.recurrent_kernel[:, :self.units]))
+
+
+		# No input Activation HNY
+		i = x_i + backend.dot(h_tm1_i, self.recurrent_kernel[:, :self.units])
 
 		f = self.recurrent_activation(x_f + backend.dot(
 		    h_tm1_f, self.recurrent_kernel[:, self.units:self.units * 2]))
@@ -168,11 +170,6 @@ class LSTM_NIA(keras.layers.Layer):
 		#print("Line 172 in Vanilla LSTM","x")
 		c, o = self._compute_carry_and_output(x, h_tm1, c_tm1)
 
-		#h = o * self.activation(c)  # To be understood
+		h = o * self.activation(c)  # To be understood
 		
-		# No input Activation  gate HNY
-		h = self.activation(c)
-		# No Output Activation Function:
-		# h = o * c  # To be understood
-
 		return h, [h, c]
